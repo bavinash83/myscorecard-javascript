@@ -21,7 +21,7 @@ var connection  = require('express-myconnection'),
             host     : 'localhost',
             user     : 'root',
             password : 'Admin123',
-            database : 'test',
+            database : 'myscorecard',
             debug    : false //set true if you wanna see debug logger
         },'request')
     
@@ -50,8 +50,22 @@ var cust = router.route('/cust');
 
 cust.get(customers.list);
 
+//user get service
 curut.get(function(req,res,next){
-    res.send('user get function');
+    //res.send('user get function');
+    console.log('Get User Function starts');
+    req.getConnection(function(err, conn){
+        if(err) return next ('Cannot Connect');
+
+        var query = conn.query('SELECT * FROM t_user', function(err,rows){
+            if(err){
+                console.log(err);
+                return next("Mysql error, check your query");
+            }
+            res.send(rows);
+        });
+    });
+
 });
 
 curut.post(function(req,res,next){
